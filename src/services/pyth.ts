@@ -22,6 +22,7 @@ class PythService {
         }
     }
 
+    // USDT per USDC
     async fetchUSDC_USDTPrice(timestamp: number): Promise<PythPriceData> {
         try {
             const priceFeeds = await this.connection.getLatestPriceFeeds(this.FEED_IDS);

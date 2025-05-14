@@ -7,9 +7,10 @@ interface PriceData {
     cetusPrice: number;
     bluefinPrice: number;
     pythPrice: number;
-    cetusPythDifference: number;
-    cetusBluefinDifference: number;
-    bluefinPythDifference: number;
+    // cetusPythDifference: number;
+    // cetusBluefinDifference: number;
+    // bluefinPythDifference: number;
+    error?: string;
 }
 
 class ExcelLogger {
@@ -33,20 +34,21 @@ class ExcelLogger {
         }
     }
 
-    log(cetusPrice: number, bluefinPrice: number, pythPrice: number) {
+    log(cetusPrice: number, bluefinPrice: number, pythPrice: number, error: string) {
         const timestamp = new Date().toISOString();
-        const cetusPythDifference = ((cetusPrice / pythPrice - 1) * 100);
-        const cetusBluefinDifference = ((cetusPrice / bluefinPrice - 1) * 100);
-        const bluefinPythDifference = ((bluefinPrice / pythPrice - 1) * 100);
+        // const cetusPythDifference = ((cetusPrice / pythPrice - 1) * 100);
+        // const cetusBluefinDifference = ((cetusPrice / bluefinPrice - 1) * 100);
+        // const bluefinPythDifference = ((bluefinPrice / pythPrice - 1) * 100);
         
         const entry: PriceData = {
             timestamp,
             cetusPrice,
             bluefinPrice,
             pythPrice,
-            cetusPythDifference,
-            cetusBluefinDifference,
-            bluefinPythDifference
+            // cetusPythDifference,
+            // cetusBluefinDifference,
+            // bluefinPythDifference
+            error,
         };
         
         this.data.push(entry);
@@ -54,12 +56,13 @@ class ExcelLogger {
         
         // Also log to console
         console.log(
-            `[${timestamp}] Cetus: ${cetusPrice.toFixed(6)} | ` +
-            `Bluefin: ${bluefinPrice.toFixed(6)} | ` +
-            `Pyth: ${pythPrice.toFixed(6)} | ` +
-            `Cetus/Pyth Diff: ${cetusPythDifference.toFixed(4)}% | ` +
-            `Cetus/Bluefin Diff: ${cetusBluefinDifference.toFixed(4)}% | ` +
-            `Bluefin/Pyth Diff: ${bluefinPythDifference.toFixed(4)}%`
+            `[${timestamp}] Cetus (USDT per USDC): ${cetusPrice.toFixed(6)} | `
+            + `Bluefin (USDC per USDT): ${bluefinPrice.toFixed(6)} | `
+            + `Pyth (USDT per USDC): ${pythPrice.toFixed(6)} | `
+            // + `Cetus/Pyth Diff: ${cetusPythDifference.toFixed(4)}% | `
+            // + `Cetus/Bluefin Diff: ${cetusBluefinDifference.toFixed(4)}% | `
+            // + `Bluefin/Pyth Diff: ${bluefinPythDifference.toFixed(4)}%`
+            + `Error: ${error ?? "N/A"}`
         );
     }
 
@@ -70,7 +73,8 @@ class ExcelLogger {
         
         // Add column headers
         XLSX.utils.sheet_add_aoa(worksheet, [
-            ['Timestamp', 'Cetus Price', 'Bluefin Price', 'Pyth Price', 'Cetus/Pyth Difference (%)', 'Cetus/Bluefin Difference (%)', 'Bluefin/Pyth Difference (%)']
+            // ['Timestamp', 'Cetus Price', 'Bluefin Price', 'Pyth Price', 'Cetus/Pyth Difference (%)', 'Cetus/Bluefin Difference (%)', 'Bluefin/Pyth Difference (%)']
+            ['Timestamp', 'Cetus Price (USDT per USDC)', 'Bluefin Price (USDC per USDT)', 'Pyth Price (USDT per USDC)', 'Error']
         ], { origin: 'A1' });
         
         XLSX.writeFile(workbook, this.logFile);

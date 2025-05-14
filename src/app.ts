@@ -17,13 +17,20 @@ export async function fetchPrices() {
             priceViaPyth
         ] = await Promise.all(
             [
-                cetusService.fetchUSDC_USDTPrice(),
-                bluefinService.fetchUSDC_USDTPrice(),
+                // cetusService.fetchUSDC_USDTPrice(),
+                // bluefinService.fetchUSDC_USDTPrice(),
+                // pythService.fetchUSDC_USDTPrice(Date.now())
+
+                // USDT per USDC
+                cetusService.fetchPrice(),
+                // USDC per USDT
+                bluefinService.fetchPrice(),
+                // USDT per USDC
                 pythService.fetchUSDC_USDTPrice(Date.now())
             ]
         );
 
-        log(priceViaCetus.price, priceViaBluefin.price, priceViaPyth.price);
+        log(priceViaCetus.price, priceViaBluefin.price, priceViaPyth.price, `${priceViaCetus.error ?? ''}${priceViaBluefin.error ?? ''}${priceViaPyth.error ?? ''}`);
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         console.log(`Error fetching prices: ${errorMessage}`);
